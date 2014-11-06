@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Domino Browser</title>
+  <meta content="initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <meta content="telephone=no, email=no" name="format-detection">
+  <script src="jquery-1.10.2.min.js"></script>
+  <style>
+  * {margin: 0; padding: 0; outline: none}
+  ul, ol, li {list-style: none}
+  .card-table {margin: 0 auto}
+  .help-show-box {position: absolute; left: 0; top: 0; width: 100%; height: 50px; border: 1px solid #bbb; background: #000; color: #fff; font-size: 14px; line-height: 1.4em; overflow: hidden;}
+  .help-show-box p {padding: 3px;}
+  /*core css*/
+  .card-table {list-style: none; width: 320px; height: 350px; border: 1px solid #000;overflow:hidden;
+  -webkit-transform-style:preserve-3d;
+   -moz-transform-style:preserve-3d;
+    -ms-transform-style:preserve-3d;
+     -o-transform-style:preserve-3d;
+        transform-style:preserve-3d;
+  -webkit-perspective:600px;
+     -moz-perspective:600px;
+      -ms-perspective:600px;
+       -o-perspective:600px;
+          perspective:600px;
+  -webkit-transform: translate3d(0, 0, 0);
+     -moz-transform: translate3d(0, 0, 0);
+      -ms-transform: translate3d(0, 0, 0);
+       -o-transform: translate3d(0, 0, 0);
+          transform: translate3d(0, 0, 0);
+  }
+  .card-table li {list-style: none; width: 100px; height: 140px; position: absolute; bottom: -90px; background: #eee; left: 800px; background: rgba(52,73,94,0.8); color: #fff; text-align: center; font-size: 20px;
+  -webkit-transition:all .4s linear;
+   -moz-transition:all .4s linear;
+    -ms-transition:all .4s linear;
+     -o-transition:all .4s linear;
+        transition:all .4s linear;
+  -webkit-transform: perspective(600px) rotateY(-80deg) translateZ(-10px);
+   -moz-transform: perspective(600px) rotateY(-80deg) translateZ(-10px);
+    -ms-transform: perspective(600px) rotateY(-80deg) translateZ(-10px);
+     -o-transform: perspective(600px) rotateY(-80deg) translateZ(-10px);
+        transform: perspective(600px) rotateY(-80deg) translateZ(-10px);
+  }
+  /*.card-table li:hover {bottom: -40px}*/
+  .card-table li:nth-child(1) {
+    left: 0;
+    bottom: -40px;
+    z-index: 18;
+    background: rgba(0,161,203,0.8);
+    -webkit-transform: perspective(600px) rotateY(0deg) translateZ(0);
+     -moz-transform: perspective(600px) rotateY(0deg) translateZ(0);
+      -ms-transform: perspective(600px) rotateY(0deg) translateZ(0);
+       -o-transform: perspective(600px) rotateY(0deg) translateZ(0);
+          transform: perspective(600px) rotateY(0deg) translateZ(0);
+  }
+  .card-table li:nth-child(2) {
+    left: 12.5%;
+    bottom: -62px;
+    z-index: 17;
+    background: rgba(135,49,140,0.8);
+    -webkit-transform: perspective(600px) rotateY(-20deg) translateZ(-10px);
+     -moz-transform: perspective(600px) rotateY(-20deg) translateZ(-10px);
+      -ms-transform: perspective(600px) rotateY(-20deg) translateZ(-10px);
+       -o-transform: perspective(600px) rotateY(-20deg) translateZ(-10px);
+          transform: perspective(600px) rotateY(-20deg) translateZ(-10px);
+  }
+  .card-table li:nth-child(3) {
+    left: 25%;
+    bottom: -76px;
+    z-index: 16;
+    -webkit-transform: perspective(600px) rotateY(-40deg) translateZ(-10px);
+     -moz-transform: perspective(600px) rotateY(-40deg) translateZ(-10px);
+      -ms-transform: perspective(600px) rotateY(-40deg) translateZ(-10px);
+       -o-transform: perspective(600px) rotateY(-40deg) translateZ(-10px);
+          transform: perspective(600px) rotateY(-40deg) translateZ(-10px);
+  }
+  .card-table li:nth-child(4) {
+    left: 35.5%;
+    bottom: -85px;
+    z-index: 15;
+    -webkit-transform: perspective(600px) rotateY(-60deg) translateZ(-10px);
+     -moz-transform: perspective(600px) rotateY(-60deg) translateZ(-10px);
+      -ms-transform: perspective(600px) rotateY(-60deg) translateZ(-10px);
+       -o-transform: perspective(600px) rotateY(-60deg) translateZ(-10px);
+          transform: perspective(600px) rotateY(-60deg) translateZ(-10px);
+  }
+  .card-table li:nth-child(5) {
+    left: 46%;
+    z-index: 14;
+  }
+  .card-table li:nth-child(6) {
+    left: 52%;
+    z-index: 13;
+  }
+  .card-table li:nth-child(7) {
+    left: 58%;
+    z-index: 12;
+  }
+  .card-table li:nth-child(8) {
+    left: 64%;
+    z-index: 11;
+  }
+  .card-table li:nth-child(9) {
+    left: 70%;
+    z-index: 10;
+  }
+  .card-table li:nth-child(10) {
+    left: 76%;
+    z-index: 9;
+  }
+  .card-table li:nth-child(11) {
+    left: 82%;
+    z-index: 8;
+  }
+  .card-table li:nth-child(12) {
+    left: 88%;
+    z-index: 7;
+  }
+  .card-table li:nth-child(13) {
+    left: 94%;
+    z-index: 6;
+  }
+  .card-table .hold {
+    width: 100px; height: 140px; position: absolute; z-index: 100; left: 0; top: 0; background: rgba(0,161,203,1); color: #fff; text-align: center; font-size: 20px;
+    /*width: 200px;
+    height: 280px;
+    bottom: 100px;
+    left: 50%;
+    margin-left: -100px;*/
+    -webkit-transition:transform .1s linear;
+     -moz-transition:transform .1s linear;
+      -ms-transition:transform .1s linear;
+       -o-transition:transform .1s linear;
+          transition:transform .1s linear;
+    -webkit-transform: translateZ(100px);
+     -moz-transform: translateZ(100px);
+      -ms-transform: translateZ(100px);
+       -o-transform: translateZ(100px);
+          transform: translateZ(100px);
+    -webkit-animation:2s linear 0s alternate none infinite shake;
+     -moz-animation:2s linear 0s alternate none infinite shake;
+      -ms-animation:2s linear 0s alternate none infinite shake;
+       -o-animation:2s linear 0s alternate none infinite shake;
+          animation:2s linear 0s alternate none infinite shake;
+  }
+  .card-table .hold.put {
+    -webkit-transition:none;
+     -moz-transition:none;
+      -ms-transition:none;
+       -o-transition:none;
+          transition:none;
+    -webkit-animation: .3s linear 0s alternate none 1 put;
+     -moz-animation: .3s linear 0s alternate none 1 put;
+      -ms-animation: .3s linear 0s alternate none 1 put;
+       -o-animation: .3s linear 0s alternate none 1 put;
+          animation: .3s linear 0s alternate none 1 put;
+    -webkit-transform: translateZ(110px);
+     -moz-transform: translateZ(110px);
+      -ms-transform: translateZ(110px);
+       -o-transform: translateZ(110px);
+          transform: translateZ(110px);
+    left: 50%; top: 45%;
+    width: 160px; height: 240px; margin: -120px 0 0 -80px;
+  }
+  .card-table .hold.back {
+    -webkit-transition:none;
+     -moz-transition:none;
+      -ms-transition:none;
+       -o-transition:none;
+          transition:none;
+    -webkit-animation: .5s linear 0s alternate none 1 back;
+     -moz-animation: .5s linear 0s alternate none 1 back;
+      -ms-animation: .5s linear 0s alternate none 1 back;
+       -o-animation: .5s linear 0s alternate none 1 back;
+          animation: .5s linear 0s alternate none 1 back;
+    left: 200%;
+  }
+  @-webkit-keyframes shake{
+    from {
+    -webkit-transform:rotateZ(15deg);
+     -moz-transform:rotateZ(15deg);
+      -ms-transform:rotateZ(15deg);
+       -o-transform:rotateZ(15deg);
+          transform:rotateZ(15deg);
+    }
+    to {
+    -webkit-transform:rotateZ(-15deg);
+       -moz-transform:rotateZ(-15deg);
+        -ms-transform:rotateZ(-15deg);
+         -o-transform:rotateZ(-15deg);
+            transform:rotateZ(-15deg);
+    }
+  }
+  @-moz-keyframes shake{
+    from {
+    -webkit-transform:rotateZ(15deg);
+     -moz-transform:rotateZ(15deg);
+      -ms-transform:rotateZ(15deg);
+       -o-transform:rotateZ(15deg);
+          transform:rotateZ(15deg);
+    }
+    to {
+    -webkit-transform:rotateZ(-15deg);
+       -moz-transform:rotateZ(-15deg);
+        -ms-transform:rotateZ(-15deg);
+         -o-transform:rotateZ(-15deg);
+            transform:rotateZ(-15deg);
+    }
+  }
+  @-ms-keyframes shake{
+    from {
+    -webkit-transform:rotateZ(15deg);
+     -moz-transform:rotateZ(15deg);
+      -ms-transform:rotateZ(15deg);
+       -o-transform:rotateZ(15deg);
+          transform:rotateZ(15deg);
+    }
+    to {
+    -webkit-transform:rotateZ(-15deg);
+       -moz-transform:rotateZ(-15deg);
+        -ms-transform:rotateZ(-15deg);
+         -o-transform:rotateZ(-15deg);
+            transform:rotateZ(-15deg);
+    }
+  }
+  @-o-keyframes shake{
+    from {
+    -webkit-transform:rotateZ(15deg);
+     -moz-transform:rotateZ(15deg);
+      -ms-transform:rotateZ(15deg);
+       -o-transform:rotateZ(15deg);
+          transform:rotateZ(15deg);
+    }
+    to {
+    -webkit-transform:rotateZ(-15deg);
+       -moz-transform:rotateZ(-15deg);
+        -ms-transform:rotateZ(-15deg);
+         -o-transform:rotateZ(-15deg);
+            transform:rotateZ(-15deg);
+    }
+  }
+  @keyframes shake{
+    from {
+    -webkit-transform:rotateZ(15deg);
+     -moz-transform:rotateZ(15deg);
+      -ms-transform:rotateZ(15deg);
+       -o-transform:rotateZ(15deg);
+          transform:rotateZ(15deg);
+    }
+    to {
+    -webkit-transform:rotateZ(-15deg);
+       -moz-transform:rotateZ(-15deg);
+        -ms-transform:rotateZ(-15deg);
+         -o-transform:rotateZ(-15deg);
+            transform:rotateZ(-15deg);
+    }
+  }
+  
+  @-webkit-keyframes put{
+    90% {
+    -webkit-transform: rotateX(30deg) rotateY(40deg) translateZ(200px);
+     -moz-transform: rotateX(30deg) rotateY(40deg) translateZ(200px);
+      -ms-transform: rotateX(30deg) rotateY(40deg) translateZ(200px);
+       -o-transform: rotateX(30deg) rotateY(40deg) translateZ(200px);
+          transform: rotateX(30deg) rotateY(40deg) translateZ(200px);
+    }
+    100% {
+    -webkit-transform: rotateY(0deg) translateZ(100px);
+       -moz-transform: rotateY(0deg) translateZ(100px);
+        -ms-transform: rotateY(0deg) translateZ(100px);
+         -o-transform: rotateY(0deg) translateZ(100px);
+            transform: rotateY(0deg) translateZ(100px);
+    }
+  }
+  @-moz-keyframes put{
+    90% {
+    -webkit-transform: rotateX(30deg) rotateY(40deg) translateZ(200px);
+     -moz-transform: rotateX(30deg) rotateY(40deg) translateZ(200px);
+      -ms-transform: rotateX(30deg) rotateY(40deg) translateZ(200px);
+       -o-transform: rotateX(30deg) rotateY(40deg) translateZ(200px);
+          transform: rotateX(30deg) rotateY(40deg) translateZ(200px);
+    }
+    100% {
+    -webkit-transform: rotateY(0deg) translateZ(100px);
+       -moz-transform: rotateY(0deg) translateZ(100px);
+        -ms-transform: rotateY(0deg) translateZ(100px);
+         -o-transform: rotateY(0deg) translateZ(100px);
+            transform: rotateY(0deg) translateZ(100px);
+    }
+  }
+  @-ms-keyframes put{
+    90% {
+    -webkit-transform: rotateX(30deg) rotateY(40deg) translateZ(200px);
+     -moz-transform: rotateX(30deg) rotateY(40deg) translateZ(200px);
+      -ms-transform: rotateX(30deg) rotateY(40deg) translateZ(200px);
+       -o-transform: rotateX(30deg) rotateY(40deg) translateZ(200px);
+          transform: rotateX(30deg) rotateY(40deg) translateZ(200px);
+    }
+    100% {
+    -webkit-transform: rotateY(0deg) translateZ(100px);
+       -moz-transform: rotateY(0deg) translateZ(100px);
+        -ms-transform: rotateY(0deg) translateZ(100px);
+         -o-transform: rotateY(0deg) translateZ(100px);
+            transform: rotateY(0deg) translateZ(100px);
+    }
+  }
+  @-o-keyframes put{
+    90% {
+    -webkit-transform: rotateX(30deg) rotateY(40deg) translateZ(200px);
+     -moz-transform: rotateX(30deg) rotateY(40deg) translateZ(200px);
+      -ms-transform: rotateX(30deg) rotateY(40deg) translateZ(200px);
+       -o-transform: rotateX(30deg) rotateY(40deg) translateZ(200px);
+          transform: rotateX(30deg) rotateY(40deg) translateZ(200px);
+    }
+    100% {
+    -webkit-transform: rotateY(0deg) translateZ(100px);
+       -moz-transform: rotateY(0deg) translateZ(100px);
+        -ms-transform: rotateY(0deg) translateZ(100px);
+         -o-transform: rotateY(0deg) translateZ(100px);
+            transform: rotateY(0deg) translateZ(100px);
+    }
+  }
+  @keyframes put{
+    90% {
+    -webkit-transform: rotateX(30deg) rotateY(40deg) translateZ(200px);
+     -moz-transform: rotateX(30deg) rotateY(40deg) translateZ(200px);
+      -ms-transform: rotateX(30deg) rotateY(40deg) translateZ(200px);
+       -o-transform: rotateX(30deg) rotateY(40deg) translateZ(200px);
+          transform: rotateX(30deg) rotateY(40deg) translateZ(200px);
+    }
+    100% {
+    -webkit-transform: rotateY(0deg) translateZ(100px);
+       -moz-transform: rotateY(0deg) translateZ(100px);
+        -ms-transform: rotateY(0deg) translateZ(100px);
+         -o-transform: rotateY(0deg) translateZ(100px);
+            transform: rotateY(0deg) translateZ(100px);
+    }
+  }
+  @-webkit-keyframes back{
+    0% {left: 50%}
+    50% {left: 40%;}
+    100% {left: 200%}
+  }
+  @-moz-keyframes back{
+    0% {left: 50%}
+    50% {left: 40%;}
+    100% {left: 200%}
+  }
+  @-ms-keyframes back{
+    0% {left: 50%}
+    50% {left: 40%;}
+    100% {left: 200%}
+  }
+  @-o-keyframes back{
+    0% {left: 50%}
+    50% {left: 40%;}
+    100% {left: 200%}
+  }
+  @keyframes back{
+    0% {left: 50%}
+    50% {left: 40%;}
+    100% {left: 200%}
+  }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="card-table">
+      <!--div class="hold"><div class="item"><p>block</p><p>item 1</p></div></div-->
+      <ul class="list">
+        <li class="first list-item"><div class="item"><p>block</p><p>item 1</p></div></li>
+        <li class="list-item"><div class="item"><p>block</p><p>item 2</p></div></li>
+        <li class="list-item"><div class="item"><p>block</p><p>item 3</p></div></li>
+        <li class="list-item"><div class="item"><p>block</p><p>item 4</p></div></li>
+        <li class="list-item"><div class="item"><p>block</p><p>item 5</p></div></li>
+        <li class="list-item"><div class="item"><p>block</p><p>item 6</p></div></li>
+        <li class="list-item"><div class="item"><p>block</p><p>item 7</p></div></li>
+        <li class="list-item"><div class="item"><p>block</p><p>item 8</p></div></li>
+        <li class="list-item"><div class="item"><p>block</p><p>item 9</p></div></li>
+        <li class="list-item"><div class="item"><p>block</p><p>item 10</p></div></li>
+        <li class="list-item"><div class="item"><p>block</p><p>item 11</p></div></li>
+        <li class="list-item"><div class="item"><p>block</p><p>item 12</p></div></li>
+        <li class="list-item"><div class="item"><p>block</p><p>item 13</p></div></li>
+      </ul>
+    </div>
+  </div>
+  <script>
+  "use strict"
+  ;(function ($, isDebug) {
+    var helper = {
+      clear: function () {
+        this.box.innerHTML = '';
+      },
+      write: function (something) {
+        var text = '';
+        if (typeof something === 'string' || typeof something === 'number') {
+          text = something;
+        } else if (typeof something === 'function') {
+          text = something.toString();
+        } else if (typeof something === 'object') {
+          text = JSON.stringify(something);
+        }
+        this.box.innerHTML = '<p>' + text + '</p>' + this.box.innerHTML;
+      },
+      ini: function () {
+        var showBox = document.createElement('div');
+        showBox.className = 'help-show-box';
+        this.box = showBox;
+        if (isDebug) {document.body.appendChild(showBox)};
+      }
+    };
+    
+    var isMobile = (function () {
+      var ua = navigator.userAgent,
+          result = false;
+      if (ua.match(/Android/i) || ua.match(/webOS/i) || ua.match(/iPhone/i) || ua.match(/iPad/i) || ua.match(/iPod/i) || ua.match(/BlackBerry/i) || ua.match(/Windows Phone/i)) {
+        result = true;
+      }
+      return result;
+    }());
+    
+    var event = {
+      start: isMobile ? 'touchstart' : 'mousedown',
+      move: isMobile ? 'touchmove' : 'mousemove',
+      end: isMobile ? 'touchend' : 'mouseup'
+    };
+    
+    (function () {
+      var isTouched = false,
+          isMove = false,
+          isSlided = false,
+          xy = {},
+          obj = null,
+          currentE = null,
+          currentItem = null,
+          putedItem = [],
+          t = 0;
+      $(document).on(event.start, function (e) {
+        var ele = $(e.originalEvent.target);
+        if (ele.parents('.list')[0]) {
+          ele = ele.hasClass('list-item') ? ele : ele.parents('.list-item');
+          if (ele.hasClass('first')) {
+            isTouched = true;
+            xy = getXY(e);
+            create(ele);
+          } else {
+            isSlided = true;
+            xy = getXY(e);
+          }
+        }
+        e.preventDefault();
+      }).on(event.move, function (e) {
+        if (isTouched || isSlided) {
+          currentE = e;
+          isMove = true;
+        }
+        e.preventDefault();
+      }).on(event.end, function (e) {
+        if (isTouched) {
+          end();
+        }
+        isTouched = false;
+        isMove = false;
+        isSlided = false;
+        e.preventDefault();
+      });
+      
+      function getXY (e) {
+        return {
+          x: typeof e.clientX === 'undefined' ? e.originalEvent.touches[0].pageX : e.clientX,
+          y: typeof e.clientY === 'undefined' ? e.originalEvent.touches[0].pageY : e.clientY
+        }
+      };
+      
+      function create (jEle) {
+        var box = $('.card-table'),
+            offset = box.offset();
+        if (obj) {obj.addClass('back');}
+        obj = $('<div class="hold"><div class="item">' + jEle.html() + '</div></div>');
+        obj.css({
+          left: xy.x - offset.left - 50,
+          top: xy.y - offset.top - 70
+        });
+        box.append(obj);
+        currentItem = jEle.removeClass('first').hide();
+        box.find('li').eq(1).addClass('first');
+        $('.card-table').find('.list').append(currentItem.show());
+        if (putedItem.length) {
+          setTimeout(function () {
+            putedItem.shift().remove();
+          }, 1000);
+        }
+      };
+      
+      function listen () {
+        if (isTouched && isMove && currentE) {
+          var box = $('.card-table'),
+              offset = box.offset(),
+              e = currentE,
+              x = typeof e.clientX === 'undefined' ? e.originalEvent.touches[0].pageX : e.clientX,
+              y = typeof e.clientY === 'undefined' ? e.originalEvent.touches[0].pageY : e.clientY;
+          obj.css({
+            left: x - offset.left - 50,
+            top: y - offset.top - 70
+          });
+        } else if (isSlided && isMove && currentE) {
+          t += 50;
+          if (t % 500 === 0) {
+            var e = currentE,
+                x = typeof e.clientX === 'undefined' ? e.originalEvent.touches[0].pageX : e.clientX,
+                y = typeof e.clientY === 'undefined' ? e.originalEvent.touches[0].pageY : e.clientY,
+                deltaX = x - xy.x,
+                deltaY = y - xy.y;
+            if (Math.abs(deltaX) >= 30) {
+              if (deltaX > 0) {
+                slide(1);
+              } else {
+                slide(-1);
+              }
+              //getXY(e);
+            }
+            t = 0;
+          }
+        }
+        setTimeout(function () {
+          listen();
+        }, 50);
+      };
+      
+      function end () {
+        putedItem.push(obj.removeAttr('style').addClass('put'));
+      }
+      
+      function slide (x) {
+        var list = $('.card-table').find('.list'),
+            temp = null;
+        if (x === 1) {
+          temp = list.find('li').first();
+          list.append(temp);
+        } else {
+          temp = list.find('li').last();
+          list.prepend(temp);
+        }
+        list.find('li').removeClass('first').eq(0).addClass('first');
+      }
+      
+      $(function () {
+        helper.ini();
+        listen();
+      });
+    }());
+    
+  }(jQuery, false));
+  </script>
+</body>
+</html>
